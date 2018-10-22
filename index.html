@@ -12,8 +12,9 @@
   
     var blank = "blank.jpg";
     
-    var pause = 0;
-    var all = 0;
+    var pause = 0; // Состояние паузы (0 - пауза снята, 1 - пауза поставлена)
+    var all = 0; // Хранит состояние игры (0 - новая игра, 1 - выиграл игрок, 2 - выиграл ПК, 3 - ничья)
+    // Хранит состояние занятости ячейки символами(0 - пустая, 1 = х, 2 = 0)
     var a = 0;
     var b = 0;
     var c = 0;
@@ -23,16 +24,19 @@
     var g = 0;
     var h = 0;
     var i = 0;
-    var temp = "";
-    var ok = 0;
-    var cf = 0;
-    var choice = 9;
-    var aRandomNumber = 0;
-    var comp = 0;
-    var wn = 0;
-    var ls = 0;
-    var ts = 0;
+    var temp = ""; // Хранит имя ячейки
+    var ok = 0; // Хранит состояние игры (1 - все хорошо, можно продолжать, 0 - что то не так)
+    var cf = 0; // Хранит значение персонажа(0 - игрок, 1 - компьютер)
+    var choice = 9; // Количество выборов
+    var aRandomNumber = 0; // Сохранение рандомного числа
+    var comp = 0; // Хнанит выбор ПК
+    var wn = 0; // Количество побед игрока
+    var ls = 0; // Количество побед компьютера
+    var ts = 0; // Количество ничьих
 
+    /*
+      Логика, относительно результата игры
+    */
     function logicOne() {
       if ((a == 1) && (b == 1) && (c == 1)) all = 1;
       if ((a == 1) && (d == 1) && (g == 1)) all = 1;
@@ -53,6 +57,9 @@
       if ((a != 0) && (b != 0) && (c != 0) && (d != 0) && (e != 0) && (f != 0) && (g != 0) && (h != 0) && (i != 0) && (all == 0)) all = 3;
     }
 
+    /*
+      Установка значения ПК
+    */
     function logicTwo() {
       if ((a == 2) && (b == 2) && (c == 0) && (temp == "")) temp = "C";
       if ((a == 2) && (b == 0) && (c == 2) && (temp == "")) temp = "B";
@@ -80,6 +87,9 @@
       if ((g == 0) && (e == 2) && (c == 2) && (temp == "")) temp = "G";
     }
 
+    /*
+      Предотвращение победы игрока
+    */
     function logicThree() {
       if ((a == 1) && (b == 1) && (c == 0) && (temp == "")) temp = "C";
       if ((a == 1) && (b == 0) && (c == 1) && (temp == "")) temp = "B";
@@ -107,12 +117,18 @@
       if ((g == 0) && (e == 1) && (c == 1) && (temp == "")) temp = "G";
     }
 
+    /*
+      Cброс истории игр
+    */
     function clearOut() {
       document.game.you.value = "0";
       document.game.computer.value = "0";
       document.game.ties.value = "0";
     }
 
+    /*
+      Проверка выбираемо пространства
+    */
     function checkSpace() {
       if ((temp == "A") && (a == 0)) {
         ok = 1;
@@ -161,6 +177,9 @@
       }
     }
 
+    /*
+      Наш выбор
+    */
     function yourChoice(chName) {
       pause = 0;
       if (all != 0) {
@@ -189,11 +208,17 @@
       }
     }
 
+    /*
+      Вывод сообщения про занятую площадь, установка паузы, которая не дает ПК сделать выбор
+    */
     function taken() {
       alert("Эта площадь уже занята. Выберите другую площадь.")
       pause = 1;
     }
 
+    /*
+      Выбор компьютера
+    */
     function myChoice() {
       temp = "";
       ok = 0;
@@ -203,6 +228,9 @@
       logicThree();
       checkSpace();
       
+      /*
+        Если не подходят значения из логики, берется рандомное значение
+      */
       while (ok == 0) {
         aRandomNumber = Math.random()
         comp = Math.round((choice - 1) * aRandomNumber) + 1;
@@ -223,10 +251,16 @@
       process();
     }
 
+    /*
+      Окончание игры
+    */
     function ended() {
       alert("Игра уже закончилась. Чтобы сыграть в новую игру, нажмите кнопку «Воспроизвести снова».")
     }
 
+    /*
+      Результаты игр, обновление очков
+    */
     function process() {
       logicOne();
       if (all == 1) {
@@ -242,6 +276,7 @@
         ts++;
       }
       
+      // Обновление очков
       if (all != 0) {
         document.game.you.value = wn;
         document.game.computer.value = ls;
@@ -249,6 +284,9 @@
       }
     }
     
+    /*
+      Повтор игры
+    */
     function playAgain() {
       if (all == 0) {
         if (confirm("Это перезапустит игру и очистит все текущие оценки. ОК?")) reset();
@@ -258,6 +296,9 @@
       }
     }
 
+    /*
+      Сброс всех значений
+    */
     function reset() {
       all = 0;
       a = 0;
@@ -302,6 +343,7 @@
         <td>
           <table border=1>
             <tr>
+              <!-- Псевдопротокол "javascript:"-->
               <td><a href="javascript:yourChoice('A')"><img src="blank.jpg" border=0 height=100 width=100 name=A></a></td>
               <td><a href="javascript:yourChoice('B')"><img src="blank.jpg" border=0 height=100 width=100 name=B></a></td>
               <td><a href="javascript:yourChoice('C')"><img src="blank.jpg" border=0 height=100 width=100 name=C></a></td>
